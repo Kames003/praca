@@ -3,7 +3,7 @@
 ## 📋 Úlohy
 
 - [ ] Úloha 1: Dorob kurzy 
-- [ ] Úloha 2: Urob zadanú úlohu 
+- [ ] Úloha 2: Urob zadanú úlohu na redmine priprav k nej dotazy ak by niečo nebolo jasne 
 
 
 ---
