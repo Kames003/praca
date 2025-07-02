@@ -9,14 +9,14 @@ ktore menia system napr. ako sudo apt install, sudo nano...
 
 
 
-# 🧱 Čo je to container (kontejner)?
+# Čo je to container (kontejner)?
 
 **Jednoducho povedané:**  
 Kontajnery sú *izolované procesy*, v ktorých bežia jednotlivé komponenty tvojich aplikácií.
 
 ---
 
-## ✅ Vlastnosti kontajnera:
+## Vlastnosti kontajnera:
 
 - **Izolované prostredie:**  
   Každý kontajner beží vo vlastnom priestore, *úplne oddelene* od ostatných kontajnerov aj hostiteľského systému.
@@ -38,7 +38,7 @@ Kontajnery sú *izolované procesy*, v ktorých bežia jednotlivé komponenty tv
 
 ---
 
-## 🤖 Containers vs Virtual Machines (VMs)
+## Containers vs Virtual Machines (VMs)
 
 | Vlastnosť          | Container                           | Virtual Machine (VM)                     |
 |--------------------|--------------------------------------|------------------------------------------|
@@ -51,7 +51,7 @@ Kontajnery sú *izolované procesy*, v ktorých bežia jednotlivé komponenty tv
 
 ---
 
-## 📝 Zhrnutie
+## Zhrnutie
 
 - Kontajner je ľahký, izolovaný balík obsahujúci všetko potrebné pre spustenie aplikácie.
 - Umožňuje bežať viacero aplikácií efektívne na jednej infraštruktúre.
