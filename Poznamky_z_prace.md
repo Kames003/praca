@@ -108,7 +108,41 @@ teda inymi slovami zabezpečuje to ak v .ssh/config nie je riadok include shared
 cd .ssh/shared
 git clone git@gitlab.railsformers.com:railsformers/ssh-config.git .
 
+**This is just a comment which is explainging how does it work** 
+
+Repozitár **ssh-config** z GitLabu sa naklonuje priamo do priečinka ~/.ssh/shared.
+
+takze prakticky len vytvorime samotnu kópiu  
+
+## Prve pripojenie na SSH 
+
+Prikaz pre overenie funkčnosti : 
+
+ssh -T git@gitlab.railsformers.com
+
+ssh = znamená prakticky secure shell nastroj na bezpečne pripojenie k vzdialenemu serveru 
+
+### Prečo tam je -T a prečo sa to používa pri GitLab-e 
+
+Keď sa teda pripájaš na GitLab cez SSH, nepotrebuješ shell, chceš len overit svoju identitu...  
+
+“Are you sure you want to continue connecting?”
+
+Důvody : tvoj ssh klient sa ešte nikdy nepripájal na server 
+Tým pádom v known hosts nema ziadny zaznam o tomto serveri, hostitelksy kluc
+
+**GitLab neponúka terminal**, očakáva, že overíš svoju identitu alebo pouziješ ssh na klonovanie, push alebo teda pull   
 
 
+aby sa teda zabranilo falošnemu pripojeniu 
 
+Ako to funguje ? 
 
+Server teda posiela svoj verejný hostitelsky kluc 
+SSH zobrazi odtlačok 
+nasledne mame teda overit, ci je to naozaj oficialny kluc servera, ku ktoremu sa chceme pripojit 
+zadame yes tak sa uklada do ~/.ssh/known_hosts = nabuduce by sa tato výzva už zobrazovat nemala 
+
+Prečo to tak je ? 
+
+Zabraňuje nepozorovanemu pripojeniu, k nespravnemu serveru, zakladny ocrhanny mechanizmus 
