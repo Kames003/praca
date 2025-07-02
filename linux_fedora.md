@@ -22,3 +22,29 @@ echo $SSH_CLIENT
 ---
 
 🧠 **Poznámka:** Tieto premenné sú nastavené **iba počas SSH pripojenia**, takže ak ich výstup neobsahuje žiadne údaje, si **lokálne na svojom stroji** a **nie na vzdialenom serveri**.
+
+
+
+# 🧠 Fun Fact: Čo je GNOME?
+
+**GNOME** je **grafické používateľské rozhranie (GUI)** pre Linux – teda tá časť systému, ktorú **vidíš** a **s ktorou pracuješ pomocou myši**.
+
+---
+
+## 🖼️ GNOME v skratke
+
+- **GNOME** je súčasťou väčšiny Linuxových distribúcií ako grafické prostredie.
+- Umožňuje spúšťať aplikácie, ovládať okná, spravovať súbory a systém.
+
+---
+
+## ⚙️ Ako GNOME funguje?
+
+- Beží na **X11** alebo **Wayland**
+  - To sú **zobrazovacie servery**, ktoré **komunikujú medzi hardvérom a grafickým prostredím**.
+- Používa **GTK** – vlastný **toolkit**:
+  - Je to súbor knižníc určený na **tvorbu aplikácií** (napr. GNOME Files, Terminal, Settings).
+
+---
+
+💡 GNOME je predvolené prostredie pre **Fedora Workstation** a mnoho ďalších distribúcií.
