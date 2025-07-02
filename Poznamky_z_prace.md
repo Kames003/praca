@@ -133,6 +133,9 @@ Tým pádom v known hosts nema ziadny zaznam o tomto serveri, hostitelksy kluc
 
 **GitLab neponúka terminal**, očakáva, že overíš svoju identitu alebo pouziješ ssh na klonovanie, push alebo teda pull   
 
+Prakticky pokial tam len necham ssh git@gitlab.railsformers.com tak to pak vypíše Welcome... 
+Shell access is not supported... = pri pridani parametru -T sa to nezobrazi 
+
 
 aby sa teda zabranilo falošnemu pripojeniu 
 
