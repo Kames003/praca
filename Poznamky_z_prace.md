@@ -155,5 +155,10 @@ Existujú dve hlavné možnosti overenia:
   - **Private key** – ostáva u teba (na tvojom zariadení)
   - **Public key** – nahráva sa na server alebo napr. do GitLabu
 
+### Test pripojenia 
+
+```bash
+ssh -T git@gitlab.com	
+```
 
 
