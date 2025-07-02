@@ -138,8 +138,22 @@ ssh -T git@gitlab.railsformers.com
 
 ---
 
-## Záver
+## SSH OVERALL
 
-- SSH = secure shell pre bezpečné vzdialené pripojenie
-- Klient-server architektúra
-- Pripojenie: `ssh používateľ@adresa_servera`
+- **SSH (Secure Shell)** slúži na bezpečné vzdialené pripojenie medzi dvoma zariadeniami.
+- **Architektúra:** klient-server
+- **Pripojenie:**  
+  ```bash
+  ssh používateľ@adresa_servera
+  ```
+### Autentifikácia
+
+Existujú dve hlavné možnosti overenia:
+
+- **Klasické heslo** – zadáva sa pri každom prihlásení.
+- **SSH kľúč (key pair)** – bezpečnejší spôsob:
+  - **Private key** – ostáva u teba (na tvojom zariadení)
+  - **Public key** – nahráva sa na server alebo napr. do GitLabu
+
+
+
