@@ -181,3 +181,16 @@ Nevykonávat zapisove prikazy bez povolenie
 Nepracuj s DS bez konzultácie 
 
 - žiadne DROP, UPDATE, DELETE alebo ALTER 
+
+Zapamataj si : cd - = vracia na posledne ulozene miesto 
+
+docker ps = 
+
+docker compose 
+
+
+
+
+
+
+
