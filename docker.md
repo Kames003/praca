@@ -1,13 +1,3 @@
-cat /etc/os-release = overenie systemu 
-
-Pouzitelne matro : https://docs.docker.com/engine/install/debian/#prerequisites 
-
-fun fact 
-
-sudo dočasne spustenie prikazu ako superpočítač/root bez nutnosti sa priamo prepnut na roota, typicky sa pouziva pred balikmi 
-ktore menia system napr. ako sudo apt install, sudo nano... 
-
-
 
 # Čo je to container (kontejner)?
 
