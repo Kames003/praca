@@ -160,5 +160,24 @@ Existujú dve hlavné možnosti overenia:
 ```bash
 ssh -T git@gitlab.com	
 ```
+## Čo nerobiť, keď sa jedná o produkčný server ? 
 
+Nevypínať žiadne procesy ani služby 
+- kill procesov, vypnutie databázy atď
+- Může to priamo ovplyvniť dostupnosť samotnej služby 
 
+Neresetovať server ani služby bez výslovného pokynu
+
+- Príkazy ako : reboot, shutdown, systemctl restart su abonded. 
+
+Needituj konfiguračné súbory 
+
+- žiadne zmeny v .conf, .env, database.yml, crontab 
+
+Nevykonávat zapisove prikazy bez povolenie 
+
+- rm, mv, cp, touch, nano, vim 
+
+Nepracuj s DS bez konzultácie 
+
+- žiadne DROP, UPDATE, DELETE alebo ALTER 
