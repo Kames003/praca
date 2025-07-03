@@ -48,3 +48,8 @@ echo $SSH_CLIENT
 ---
 
 💡 GNOME je predvolené prostredie pre **Fedora Workstation** a mnoho ďalších distribúcií.
+
+
+--- 
+
+Apps otváraj v štýle napr. gnome-control-center == otvori nastavenia 
