@@ -1,4 +1,4 @@
-# Toto sa vzťahuje na docker app 
+# Toto sa vzťahuje na docker app ale su tu i overall important things 
 # Čo je to container (kontejner)?
 
 **Jednoducho povedané:**  
