@@ -90,4 +90,70 @@ docker run -p <host_port>:<container_port> <image>
 - **Docker Hub** = kuchárska kniha (recepty)
 - **Docker Image** = konkrétny recept
 - **Docker Container** = hotové jedlo
+
+# Docker: Rozdiel medzi `docker run`, `docker images` a `docker start`
+
+## 🔹 docker run
+
+- **Vytvára a spúšťa nový kontajner** na základe daného imagu.
+- Ak image nie je lokálne, automaticky sa stiahne z Docker Hubu.
+- Pomocou parametrov vieš hneď definovať:
+  - `-p <host>:<container>` – mapovanie portov
+  - `-d` – spustenie v pozadí (detached mode)
+  - `--name` – pomenovanie kontajnera
+  - `-v` – mountovanie volume
+  - `-e` – nastavenie environmentálnych premenných
+
+### Príklad:
+```bash
+docker run -d -p 8080:80 --name webserver nginx
+```
+➡️ Vytvorí a spustí nový kontajner `webserver` z imagu `nginx`.
+
+---
+
+## 🔹 docker images
+
+- **Zobrazí zoznam všetkých imagov**, ktoré sú uložené lokálne.
+- Nepretraktuje kontajnery, len samotné imagy (blueprinty).
+- Image môžeš zmazať pomocou `docker rmi <image_id>`.
+
+### Príklad:
+```bash
+docker images
+```
+
+#### Výstup:
+```
+REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
+nginx        latest    abc123def456   2 weeks ago     133MB
+```
+
+---
+
+## 🔹 docker start
+
+- **Spúšťa už existujúci kontajner**, ktorý bol predtým vytvorený cez `docker run`.
+- Zachová všetky pôvodné atribúty kontajnera (porty, mounty, názvy...).
+- Vhodné na opätovné spustenie po vypnutí.
+
+### Príklad:
+```bash
+docker start webserver
+```
+
+#### Interaktívne so shellom:
+```bash
+docker start -ai webserver
+```
+
+---
+
+## 🧠 Zhrnutie:
+
+| Príkaz         | Význam |
+|----------------|--------|
+| `docker run`   | Vytvorí a spustí **nový kontajner** s definovanými parametrami |
+| `docker images`| Vypíše všetky **lokálne dostupné imagy** |
+| `docker start` | Spustí **už existujúci** (zastavený) kontajner |
 - **Docker Engine** = kuchár, ktorý varí podľa receptu
