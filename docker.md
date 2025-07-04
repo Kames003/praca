@@ -157,3 +157,73 @@ docker start -ai webserver
 | `docker images`| Vypíše všetky **lokálne dostupné imagy** |
 | `docker start` | Spustí **už existujúci** (zastavený) kontajner |
 - **Docker Engine** = kuchár, ktorý varí podľa receptu
+
+## 🧩 Príkazy
+
+### Spustenie Shellu v kontajneri
+```bash
+docker exec -it <container_id_or_name> /bin/bash
+```
+- `-i` (interactive): udrží štandardný vstup otvorený – môžeme písať do terminálu
+- `-t` (tty): priradí pseudo-terminál (simuluje terminálové rozhranie)
+
+> Týmto sa dostávame do interaktívneho prostredia kontajnera. Každý kontajner má svoj izolovaný virtuálny súborový systém.
+
+### Zobrazenie environmentálnych premenných
+```bash
+printenv
+```
+
+---
+
+## 🚀 `docker run`
+
+- Vytvorí a spustí nový kontajner zo zadaného imagu
+- Príklad:
+```bash
+docker run -d -p 27017:27017 mongo
+```
+- `-d`: detached mód (beží na pozadí)
+- `-p`: prepája porty `host:container`
+
+---
+
+## 🌐 Docker Networks
+
+- Docker automaticky vytvára izolované siete
+- Kontajnery v tej istej sieti spolu komunikujú cez **meno kontajnera**, nepotrebujú `localhost` ani port
+- Príkazy:
+```bash
+docker network ls
+docker network create <nazov_siete>
+```
+
+### Využitie v praxi:
+- Kontajnery (napr. MongoDB a Mongo Express) komunikujú cez mená
+- Aplikácie mimo tejto siete (napr. host Node.js) používajú `localhost:port`
+
+---
+
+## ⚙️ Docker Compose vs Docker Run
+
+| Docker Compose                         | Docker Run                             |
+|---------------------------------------|----------------------------------------|
+| .yaml súbor pre definovanie služieb   | Príkazy v CLI                          |
+| Jednoduchšia správa viacerých služieb | Vhodné pre jednoduché testovanie       |
+| Verzia zistíš príkazom:               |                                        |
+```bash
+docker compose version
+```
+
+---
+
+## 📝 Zhrnutie
+
+- `docker exec -it`: interaktívny prístup ku kontajneru
+- `docker run`: spustenie kontajnera s parametrami
+- Docker networks: izolované prostredie pre komunikáciu kontajnerov
+- Docker Compose: YAML-based orchestrácia kontajnerov
+
+
+
+
