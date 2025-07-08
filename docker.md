@@ -224,15 +224,128 @@ docker compose version
 - Docker networks: izolované prostredie pre komunikáciu kontajnerov
 - Docker Compose: YAML-based orchestrácia kontajnerov
 
+JS application which connets to the database displays retrieved datas, than we are going to conternize with dockerfile run it as a part of a compose 
 
-// prakticky stačí pridať depends_on a mozeme to pridať 
-docker compose -f <name_of_the_file> up
-docker compose -f <name_of_the_file> down
-docker compose -f <name_of_the_file> stop 
+server js is the node js backend 
 
-docker compose up = vytvori a sputi kontajnery ak ešte neexistuju 
-docker compose down = zastavi a odstrani kontajnery 
-docker compose start = spusti uz existujuce kontajnery, vytvorene pred tym 
-docker compose stop = zastavi beziace kontajnery, ale ich neodstrani 
+# Important concept 
 
-## 
+the way how can override is using a flag in the docker compose 
+
+docker compose --project-name projects -f mongo-services.yaml up -d
+
+
+toto je overrid predvoleneho nazvu 
+
+with the enviromental variables there are security problems 
+
+docker compose has the concepts of the secrets 
+
+docker images -q = dostaneme len ids 
+
+.json, key value pares fundomentalnym zakladom 
+== key musi byt v uvodzovkach 
+"name" : "The ultimate Docker Course",
+"price": 149,
+"tags": 
+
+parsing of the yaml file is little bit slower than parsing of the json file 
+
+just some regular fun facrs docker-compose = 2014, docker-compose version 2 : 2020
+
+V2 ignores top level component teda verziu samotnu 
+
+motivacia prečo sa vůbec compose pouziva ? 
+
+local development, run demo = v)čšina open source projektov poskytuje demičko ktore si můžeme stiahnut a runnut u seba, deploy on a single linux server 
+
+klasik pre python treba virtualne prostredie venv
+python -m venv .venv 
+source .venv/bin/activate = toto je pre aktivaciu 
+
+pip freeze > requirements.txt = vypiše aktualne nainštalovane python baliky v aktivnom prostredi aj s ich verziami 
+
+! nezabudni na toto je to podstatne 
+
+kde > znamena presmeruj vystup priakzu do súboru 
+
+a samotny .txt slúži ako zoznam zavisloti 
+
+curl 127.0.0.1:5000/about
+
+// we are getting hardcoded version back 
+
+flask --app app run 
+
+--app app = hovoriš moja aplikacia je v súbore app.py 
+run = flask spusti vstavany vyvojovy webserver 
+
+flask spúšťa tvoju flask aplikaciu 
+
+## DockerFile how does it should looks like ? 
+
+FROM python:3.12.4-alpine3.20
+# Pouzijeme predpripraveny baliček s pythonom 
+# začni s oficialnym balikom pythonu 
+# verzia pythonu : 3.12.4 
+
+# we use this to reduce the size of Docker images 
+
+RUN apk --no-cache add curl 
+
+if we want to add new packages we need to do it inside of the venv 
+
+containers which are isolated groups of proceses
+
+kazdy container ma všetko na to aby mohol runnovat 
+# --no-cache nezachovava cache baličkov čo znižuje velkost docker imagov
+# curl je teda nastroj na http poziadavky 
+
+WORKDIR /app
+
+# ? workdir je ako cd / app vo vnutri kontajnera, 
+# ! všetky relativne cesty sa vykonavaju v ramci priečinka app 
+# od teraz pracuj v priečinku / app v containery 
+# bude to v jednom priečinku nebude ziadny bordel 
+
+
+COPY requirements.txt .
+
+# vezme subor requirements a kopne to do priečinka /app 
+# chceme nainštalovať najskor kniznice, a ak sa to nezmeni docker ho vie vyuzit z cache 
+# netreba inštalovať všetko znovu = šetrime tym čas pri builde 
+
+
+
+RUN pip install -r requirements.txt
+# prečitaj req... a nainštaluj všetky potrebne knižnice 
+
+
+
+# ! prečíta a nainštaluje baliky do kontajnera 
+# ? ak sa requirements.txt nezmenil, docker pouzije cache a preskoči build 
+
+COPY app.py .
+
+# a v poslednom rade zoberiem kod do pripraveneho prostredia kde uz python kniznice su 
+
+# ! posledny krok, ktory určuje čo sa musi spustit ked sa kontajner naštartuje 
+
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
+
+# gunicorn = produkčny webserver pre python
+# bind 8000 aby počuval na všetkych sietovych rozhraniach 
+
+VM = virtual machine emulates entire machines kernel 
+container 
+
+by default containers are isolated from the host network 
+
+image size matters a lot 
+
+alpine image is focused on a minimalism
+
+debuging containers 
+
+docker exec -it 196aac69f495 /bin/bash
