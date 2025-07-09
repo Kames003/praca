@@ -224,128 +224,296 @@ docker compose version
 - Docker networks: izolované prostredie pre komunikáciu kontajnerov
 - Docker Compose: YAML-based orchestrácia kontajnerov
 
-JS application which connets to the database displays retrieved datas, than we are going to conternize with dockerfile run it as a part of a compose 
 
-server js is the node js backend 
+# 🐳 Docker + Flask + Compose – praktický prehľad a koncepty
 
-# Important concept 
+## 🧠 Základná myšlienka
+JavaScript aplikácia alebo Flask backend sa pripája na databázu, zobrazí údaje a následne sa všetko kontajnerizuje cez `Dockerfile` a spustí pomocou `docker compose`.
 
-the way how can override is using a flag in the docker compose 
+---
 
+## 📦 Docker Compose – Prečo?
+
+- **Lokálny vývoj**
+- **Demo open-source projektov**
+- **Nasadenie na jednom serveri**
+
+---
+
+## 🔐 Environmentálne premenne vs Secrets
+
+- **Nevýhoda env premenných:** bezpečnostné riziko (napr. pri logovaní alebo výpisoch)
+- **Docker secrets:** oddelený mechanizmus na bezpečné ukladanie citlivých údajov
+
+---
+
+## ⚙️ Override projektu v Compose
+
+```bash
 docker compose --project-name projects -f mongo-services.yaml up -d
+```
 
+➡️ Prepíše predvolený názov projektu
 
-toto je overrid predvoleneho nazvu 
+---
 
-with the enviromental variables there are security problems 
+## 🧾 JSON vs YAML
 
-docker compose has the concepts of the secrets 
+- `.json` = **key-value** formát, kde kľúč MUSÍ byť v úvodzovkách
+```json
+{
+  "name": "The ultimate Docker Course",
+  "price": 149,
+  "tags": ["docker", "flask"]
+}
+```
 
-docker images -q = dostaneme len ids 
+- YAML je čitateľnejší, ale jeho **parsing je pomalší** než JSON
 
-.json, key value pares fundomentalnym zakladom 
-== key musi byt v uvodzovkach 
-"name" : "The ultimate Docker Course",
-"price": 149,
-"tags": 
+---
 
-parsing of the yaml file is little bit slower than parsing of the json file 
+## 🗂️ Flask aplikácia – základ
 
-just some regular fun facrs docker-compose = 2014, docker-compose version 2 : 2020
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip freeze > requirements.txt
+```
 
-V2 ignores top level component teda verziu samotnu 
+- `.venv` = izolované prostredie
+- `requirements.txt` = zoznam závislostí
+- `>` = presmerovanie výstupu do súboru
 
-motivacia prečo sa vůbec compose pouziva ? 
+---
 
-local development, run demo = v)čšina open source projektov poskytuje demičko ktore si můžeme stiahnut a runnut u seba, deploy on a single linux server 
+## 🛰️ Testovanie lokálne
 
-klasik pre python treba virtualne prostredie venv
-python -m venv .venv 
-source .venv/bin/activate = toto je pre aktivaciu 
-
-pip freeze > requirements.txt = vypiše aktualne nainštalovane python baliky v aktivnom prostredi aj s ich verziami 
-
-! nezabudni na toto je to podstatne 
-
-kde > znamena presmeruj vystup priakzu do súboru 
-
-a samotny .txt slúži ako zoznam zavisloti 
-
+```bash
 curl 127.0.0.1:5000/about
+```
 
-// we are getting hardcoded version back 
+➡️ Dostaneme späť hardkodovanú verziu z `Flask` aplikácie
 
-flask --app app run 
+```bash
+flask --app app run
+```
 
---app app = hovoriš moja aplikacia je v súbore app.py 
-run = flask spusti vstavany vyvojovy webserver 
+- `--app app` → súbor `app.py`
+- `run` → spustenie vývojového web servera
 
-flask spúšťa tvoju flask aplikaciu 
+---
 
-## DockerFile how does it should looks like ? 
+## 🐳 Dockerfile – Ako vyzerá?
 
+```dockerfile
 FROM python:3.12.4-alpine3.20
-# Pouzijeme predpripraveny baliček s pythonom 
-# začni s oficialnym balikom pythonu 
-# verzia pythonu : 3.12.4 
-
-# we use this to reduce the size of Docker images 
-
-RUN apk --no-cache add curl 
-
-if we want to add new packages we need to do it inside of the venv 
-
-containers which are isolated groups of proceses
-
-kazdy container ma všetko na to aby mohol runnovat 
-# --no-cache nezachovava cache baličkov čo znižuje velkost docker imagov
-# curl je teda nastroj na http poziadavky 
+RUN apk --no-cache add curl
 
 WORKDIR /app
 
-# ? workdir je ako cd / app vo vnutri kontajnera, 
-# ! všetky relativne cesty sa vykonavaju v ramci priečinka app 
-# od teraz pracuj v priečinku / app v containery 
-# bude to v jednom priečinku nebude ziadny bordel 
-
-
 COPY requirements.txt .
-
-# vezme subor requirements a kopne to do priečinka /app 
-# chceme nainštalovať najskor kniznice, a ak sa to nezmeni docker ho vie vyuzit z cache 
-# netreba inštalovať všetko znovu = šetrime tym čas pri builde 
-
-
-
 RUN pip install -r requirements.txt
-# prečitaj req... a nainštaluj všetky potrebne knižnice 
-
-
-
-# ! prečíta a nainštaluje baliky do kontajnera 
-# ? ak sa requirements.txt nezmenil, docker pouzije cache a preskoči build 
 
 COPY app.py .
 
-# a v poslednom rade zoberiem kod do pripraveneho prostredia kde uz python kniznice su 
-
-# ! posledny krok, ktory určuje čo sa musi spustit ked sa kontajner naštartuje 
-
-
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
+```
 
-# gunicorn = produkčny webserver pre python
-# bind 8000 aby počuval na všetkych sietovych rozhraniach 
+- `alpine` → malý image (optimalizácia veľkosti)
+- `WORKDIR` → ako `cd /app`
+- `COPY` a `RUN` sú optimalizované na využitie cache
+- `CMD` → čo sa spustí pri štarte kontajnera
 
-VM = virtual machine emulates entire machines kernel 
-container 
+---
 
-by default containers are isolated from the host network 
+## 🧱 VM vs Container
 
-image size matters a lot 
+| Vlastnosť             | VM                    | Container              |
+|------------------------|-----------------------|------------------------|
+| Kernel                | Vlastný               | Zdieľaný s hostom      |
+| Veľkosť               | Väčšia                | Menšia (napr. Alpine)  |
+| Izolácia              | Plná                  | Procesová              |
 
-alpine image is focused on a minimalism
+- **Containery sú izolované od hostiteľa**
+- **Porty sú dostupné vo vnútri virtuálnej siete**
 
-debuging containers 
+---
 
-docker exec -it 196aac69f495 /bin/bash
+## 🧪 Debugging
+
+```bash
+docker exec -it <container_id> /bin/bash
+```
+
+---
+
+## 📅 Fun facts
+
+- `docker-compose`: vznikol v **2014**
+- `docker-compose v2`: **2020**
+- v2 **ignoruje top-level version** vo `docker-compose.yaml`
+
+---
+
+## 🔁 Vývojový cyklus v Dockeri
+
+1. Vytvorenie aplikácie (napr. Flask, JS)
+2. Príprava `Dockerfile`
+3. Príprava `docker-compose.yaml`
+4. Build a spustenie
+5. Testovanie a ladenie
+6. Deployment
+
+---
+
+
+# 🐳 Docker – Od Aplikácie po Kontajner
+
+Tento materiál vysvetľuje rozdiely medzi Dockerfile a Compose súborom, krok po kroku od vytvorenia aplikácie až po jej spustenie ako kontajner.
+
+---
+
+## 🧱 1. Vytvorenie vlastnej aplikácie
+
+Najprv si vytváraš vlastnú aplikáciu – napríklad Flask API, Node.js server, Ruby Sinatra app alebo Java Spring Boot.  
+Toto je obyčajný kód, ktorý funguje aj mimo Dockera.
+
+---
+
+## 📦 2. Dockerfile – ako vytvoriť *image* z aplikácie
+
+**Dockerfile** je inštrukčný súbor, ktorý hovorí Dockeru, **ako z tvojej aplikácie vytvoriť image**.  
+Tento image obsahuje všetko potrebné na spustenie: kód, runtime, knižnice a konfigurácie.
+
+### 🔧 Príklad `Dockerfile`:
+```Dockerfile
+FROM python:3.12-alpine
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+```
+
+- `FROM` – základný image, napr. Python
+- `COPY` – skopíruje tvoje súbory do image
+- `RUN` – inštaluje závislosti
+- `CMD` – spustí aplikáciu
+
+👉 **Výsledok:** Image s tvojou appkou pripravený na spustenie.
+
+---
+
+## ⚙️ 3. docker-compose.yaml – ako spustiť *container* z image-u
+
+`docker-compose.yaml` je súbor, ktorý definuje **ako spustiť tvoju aplikáciu ako kontajner** (alebo viacero kontajnerov – napr. appka + databáza).
+
+### 🧩 Rozdiel oproti Dockerfile:
+- **Dockerfile** = *ako postaviť image*
+- **Compose file** = *ako spustiť kontajner(y)* z image + prepojiť ich
+
+### 🔧 Príklad `docker-compose.yaml`:
+```yaml
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+```
+
+- `build: .` – použije Dockerfile z aktuálneho priečinka
+- `ports` – premapuje porty (host:container)
+- `image:` – môže použiť hotový image z Docker Hubu
+
+---
+
+## 🧠 Zhrnutie
+
+| Krok | Súbor | Úloha |
+|------|-------|--------|
+| 1. | Tvoja appka (napr. `app.py`) | Logika aplikácie |
+| 2. | `Dockerfile` | Ako z appky spraviť image |
+| 3. | `docker-compose.yaml` | Ako spustiť kontajner(y) z image |
+
+---
+
+💡 **Poznámka:** Docker Compose umožňuje ľahko definovať viacero služieb, ich sieťovanie, premenné prostredia a persistentné volume.
+
+---
+
+# 🔄 Bind Mount vs Docker Volume
+
+## 🗂️ Bind Mount
+
+```yaml
+volumes:
+  - ./mydata:/var/lib/postgresql/data
+```
+
+- `./mydata` je konkrétny priečinok **na hostiteľskom počítači**
+- Čokoľvek zapíše PostgreSQL do `/var/lib/postgresql/data` sa **fyzicky objaví** v `./mydata` na hostovi
+
+### ✅ Výhody:
+- Máš **plnú kontrolu nad súbormi**
+- Môžeš do priečinka **vstupovať priamo z host systému**
+
+### ⚠️ Nevýhody:
+- Závisí od **presnej štruktúry cesty**
+- Môže nastať problém pri **migrácii na iný systém alebo tím**
+
+---
+
+## 📦 Docker Volume
+
+```yaml
+volumes:
+  - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+```
+
+- `postgres-data` je **Docker volume**, ktorý Docker spravuje **automaticky**
+- Fyzicky sa môže ukladať do:
+  ```
+  /var/lib/docker/volumes/postgres-data/_data
+  ```
+  ale ty túto cestu **nešpecifikuješ priamo**
+
+### ✅ Výhody:
+- **Bezpečne prenosné**
+- Docker sa stará o celý **životný cyklus (lifecycle)**: zálohy, obnovy, mazanie
+- Vhodné pre **produkciu**
+
+### ⚠️ Nevýhody:
+- **Nemáš jednoduchý priamy prístup** k dátam mimo kontajnera
+
+---
+
+## 📝 Zhrnutie:
+| Typ             | Prístup k dátam | Prenositeľnosť | Vhodné pre      |
+|------------------|------------------|------------------|------------------|
+| Bind Mount       | Priamy           | Nižšia           | Vývoj, ladenie   |
+| Docker Volume    | Nepriamy (cez Docker) | Vysoká     | Produkcia        |
+
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+
+
