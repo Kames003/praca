@@ -799,3 +799,42 @@ If a server fails the health check, it is temporarily removed from rotation.
 | Least Connection         | Dynamic  | ✅          | Chooses least busy server          |
 | Weighted Least Connection| Dynamic  | ✅          | Considers server power             |
 | Resource-Based           | Dynamic  | ✅          | Monitors real-time load            |
+
+
+# Docker Networking – Poznámky
+
+## Bridge Network
+
+- Je to **virtuálne zariadenie**, ktoré pripája viacero lokálnych sietí (LAN).
+- **Bridge môže rozdeliť lokálnu sieť** na menšie segmenty (subnety).
+- Docker používa `bridge` ako **predvolenú sieť** pre kontajnery, ktoré nemajú explicitne špecifikovanú sieť.
+- Príkaz: `docker network inspect bridge` — zobrazí detaily o bridge sieti.
+- Keď sa **pripojíš do kontajnera**, často musíš použiť `sh` alebo `bash`, aby si interagoval s jeho shellom.
+- Niektoré nástroje ako `curl` môžu v kontajneroch zobraziť chybu **„dns is not supported“**, ak sieť nie je správne nastavená.
+
+---
+
+## Host Network
+
+- Kontajner **zdieľa sieťový stack hosta** — beží ako keby bol priamo na host systéme.
+- Výhoda: **vyšší výkon** (napr. žiadne NAT pre sieť).
+- Použitie: `--network host`
+- Nevýhoda: nie je izolovaný od hosta — zdieľajú IP adresu.
+
+---
+
+## None Network
+
+- Kontajner **nie je pripojený k žiadnej sieti**.
+- Slúži na úplnú izoláciu — žiadny prístup na internet alebo k iným kontajnerom.
+- Použitie: `--network none`
+
+---
+
+## Zhrnutie
+
+| Typ siete  | Prístup k hostovi | Izolácia | Výkon | Využitie                                  |
+|------------|-------------------|----------|--------|-------------------------------------------|
+| Bridge     | Nie                | Áno      | 🟡      | Predvolené, flexibilné pre väčšinu prípadov |
+| Host       | Áno               | Nie       | 🟢      | Pri potrebe maximálneho výkonu             |
+| None       | Nie                | Áno      | 🔴      | Izolované výpočty, bezpečnosť             |
