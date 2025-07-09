@@ -701,3 +701,101 @@ networks:
         - subnet: "10.0.0.0/19"
           gateway: "10.0.0.1"
 ```
+
+
+# Load Balancing Algorithms
+
+## 🔍 Purpose
+Load balancers help distribute incoming traffic across multiple servers to **prevent any single server from becoming overloaded**.
+
+---
+
+## ⚙️ Static Load Balancing Algorithms
+
+These algorithms **ignore the state** of any particular server (e.g., CPU usage, load, or current connections).  
+They follow **fixed rules** and are **independent of real-time server performance**.
+
+### ✅ Advantages
+- Simple and efficient to implement
+- Require no monitoring of server state
+
+### 📘 Common Static Algorithms
+
+#### 1. Round Robin
+Each incoming request is assigned to the next server in a cyclic order.
+
+Example:
+- Request 1 → Server A  
+- Request 2 → Server B  
+- Request 3 → Server C  
+- Request 4 → Server A ...
+
+Best used when all servers have **identical specs**.
+
+#### 2. Weighted Round Robin
+Similar to Round Robin, but each server is given a **weight**.
+
+Example:
+- If Server A has weight 2, it receives twice as many requests as Server B (with weight 1).
+
+Useful when one server has **better performance specs** or is hosting **critical data**.
+
+#### 3. Hashing Methods
+Assigns requests to servers based on calculated hash values.
+
+- **IP Hash**: Hash of client IP or combination of client & server IPs
+- **URL Hash**: Hash of the request URL
+- **Five Tuple Hash**: Combines
+  - Source IP
+  - Source Port
+  - Destination IP
+  - Destination Port
+  - IP Protocol
+
+#### 4. Random Algorithm
+Requests are assigned randomly to any server.  
+Does not follow any pattern.
+
+---
+
+## 🔄 Dynamic Load Balancing Algorithms
+
+These algorithms consider the **current state of the servers** before making a routing decision.
+
+### 📘 Common Dynamic Algorithms
+
+#### 1. Least Connection
+Directs the request to the server with the **fewest active connections**.
+
+#### 2. Weighted Least Connection
+Same as Least Connection, but considers **server specs** via manual **weights**.
+
+#### 3. Resource-Based Algorithm
+Uses real-time metrics like:
+- CPU usage
+- Memory load
+- Network/disk I/O
+
+🔧 Requires a **special monitoring agent** on each server.
+
+Best used when requests **require varying amounts of resources**.
+
+---
+
+## 🩺 Health Checks
+Most load balancers include **health checks**.  
+If a server fails the health check, it is temporarily removed from rotation.
+
+---
+
+## 🧠 Summary
+
+| Algorithm                | Type     | State-Aware | Notes                              |
+|--------------------------|----------|-------------|------------------------------------|
+| Round Robin              | Static   | ❌          | Cycles requests evenly             |
+| Weighted Round Robin     | Static   | ❌          | Manual weights for stronger nodes |
+| IP/URL/Five Tuple Hash   | Static   | ❌          | Consistent request routing         |
+| Random                   | Static   | ❌          | Unpredictable but simple           |
+| Least Connection         | Dynamic  | ✅          | Chooses least busy server          |
+| Weighted Least Connection| Dynamic  | ✅          | Considers server power             |
+| Resource-Based           | Dynamic  | ✅          | Monitors real-time load            |
