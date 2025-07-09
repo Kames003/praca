@@ -500,20 +500,204 @@ volumes:
 | Bind Mount       | Priamy           | Nižšia           | Vývoj, ladenie   |
 | Docker Volume    | Nepriamy (cez Docker) | Vysoká     | Produkcia        |
 
+# 🐳 Docker Compose Setup with Flask, PostgreSQL and NGINX
 
+## 📦 Package Snapshot
 
+To capture the current Python environment:
+```bash
+pip freeze > requirements.txt
+```
 
+---
 
- 
+## 🧱 Services Overview
 
+### 🔁 Postgres
+- Acts as the backend database.
+- Secrets are used to inject the password securely.
+- Attached to the **private** network.
 
- 
+### 🌐 NGINX
+- Acts as a **reverse proxy** or **load balancer**.
+- Exposed on port `8080`.
+- Uses a custom config from the `nginx_config`.
+- Attached to **public** network.
+- Uses **health check dependency** for Flask container (`condition: service_healthy`).
 
+### ⚙️ Flask
+- Main web application.
+- Built from `Dockerfile.dev` inside `./flask` directory.
+- Uses env vars, bind mounts, secrets, configs.
+- Connected to **private** and **public** networks.
+- Includes a proper health check via `/about`.
 
+---
 
+## 🚫 Depends On – Static Dependency Warning
 
+It’s not ideal to statically assume:
+```yaml
+depends_on:
+  - postgres
+```
+Why?
+- Flask may **crash** if DB isn't ready.
+- Instead, a **healthcheck** mechanism is used:
+```yaml
+depends_on:
+  flask:
+    condition: service_healthy
+    restart: true
+```
 
+Flask has a **30s timeout** while waiting for DB, so using `healthcheck` is more reliable.
 
+---
 
+## 🔐 Network Isolation Strategy
 
+- NGINX is on **public** network → exposed to internet.
+- Flask and PostgreSQL are on **private** network → hidden and secured.
+- Ensures **PostgreSQL is not publicly accessible**.
 
+---
+
+## ✅ Healthcheck Configuration
+
+Example for Flask:
+```yaml
+healthcheck:
+  test: ["CMD", "curl", "-f", "http://localhost:8000/about"]
+  interval: 5s
+  retries: 5
+  start_period: 15s
+  timeout: 5s
+```
+
+### Healthcheck Meaning:
+- Any `curl` result in **200-399** is considered **healthy**.
+- Codes **300-399** indicate redirects (client-side actions required).
+
+---
+
+## 🧪 Testing Internal Networking (SSH into container)
+
+```bash
+docker exec -it <container_name> sh
+```
+
+### Test Connectivity:
+```bash
+nc -vz flask 8000
+```
+
+- `nc` = netcat
+- `-v` = verbose
+- `-z` = zero-I/O mode (connection test only)
+- `flask` = container name
+- `8000` = target port
+
+---
+
+## 🔐 NGINX + Let’s Encrypt (TLS)
+
+> 🔐 Secure NGINX setup using Let's Encrypt is recommended for HTTPS.
+
+---
+
+## 🧾 Docker Compose Snippet
+
+```yaml
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8080:8080
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    networks:
+      - public
+    depends_on:
+      flask:
+        condition: service_healthy
+        restart: true
+
+  flask:
+    image: flask:latest
+    build:
+      context: ./flask
+      dockerfile: Dockerfile.dev
+    env_file:
+      - flask/dev.env
+    secrets:
+      - api_key
+      - source: api_key
+        target: /api_key.txt
+    configs:
+      - source: my_config
+        target: /config-dev-v2.yaml
+    environment:
+      - APP_VERSION=0.1.0
+      - APP_TOKEN=${APP_TOKEN}
+      - FLASK_DEBUG=1
+      - FLASK_APP=./app.py
+      - DB_HOST=postgres
+      - DB_DATABASE=mydb
+      - DB_USER=myuser
+    volumes:
+      - ./flask/config-dev.yaml:/config-dev.yaml
+      - ./flask/my-data:/data
+      - flask-data:/data
+      - ./flask:/app
+    networks:
+      - private
+      - public
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/about"]
+      interval: 5s
+      retries: 5
+      start_period: 15s
+      timeout: 5s
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_DB: mydb
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_password
+    secrets:
+      - pg_password
+    volumes:
+      - postgres-data:/var/lib/postgressql/data
+    networks:
+      - private
+
+secrets:
+  api_key:
+    file: flask/api_key.txt
+  pg_password:
+    file: /home/tomasmucha/Plocha/pg_password.txt
+
+configs:
+  my_config:
+    file: ./flask/config-dev.yaml
+  nginx_config:
+    file: /home/tomasmucha/Plocha/nginx.conf
+
+volumes:
+  flask-data:
+  postgres-data:
+
+networks:
+  public:
+  private:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "10.0.0.0/19"
+          gateway: "10.0.0.1"
+```
