@@ -838,3 +838,152 @@ If a server fails the health check, it is temporarily removed from rotation.
 | Bridge     | Nie                | Áno      | 🟡      | Predvolené, flexibilné pre väčšinu prípadov |
 | Host       | Áno               | Nie       | 🟢      | Pri potrebe maximálneho výkonu             |
 | None       | Nie                | Áno      | 🔴      | Izolované výpočty, bezpečnosť             |
+
+
+--- 
+
+# 🐳 Docker Logs & Debugging – Poznámky
+
+## 📥 Prístup do kontajnera
+```bash
+docker exec -it <container_id> bash
+```
+- Interaktívne vojdeš do bežiaceho kontajnera
+
+```bash
+ls -la
+```
+- `-l` = long list (podrobnosti)
+- `-a` = zobrazí aj skryté súbory
+
+---
+
+## 📋 Docker Logs – štandardný výstup
+
+- Docker logy idú na `stdout` a `stderr`
+- Môžeme ich čítať pomocou príkazu:
+
+```bash
+docker logs <container_id_or_name>
+```
+
+---
+
+## 🕒 Logovanie podľa času
+
+```bash
+docker logs --tail 5 <id>
+```
+- Posledných 5 riadkov
+
+```bash
+docker logs --since 2m <id>
+```
+- Logy od času mínus 2 minúty (podobne `h`, `s`, `d`, ...)
+
+```bash
+docker logs --since 15m --until 5m <id>
+```
+- Logy **od 15 minút dozadu do 5 minút dozadu**
+
+```bash
+docker logs --since 2023-10-01T00:00:00 <id>
+```
+- Absolútny timestamp
+
+---
+
+## 🔍 Filtrovanie logov
+
+```bash
+docker logs <id> | grep "GET"
+```
+- Vyfiltruje všetky riadky obsahujúce "GET"
+
+---
+
+## 🔄 Sledovanie logov v reálnom čase
+
+```bash
+docker logs -f <id>
+```
+
+```bash
+docker logs -f --tail 50 <id>
+```
+- Sleduj živé logy, začni poslednými 50 riadkami
+
+---
+
+## ⚙️ Logging Driver
+
+- Mechanizmus, ako sa logy ukladajú a spracovávajú
+- Predvolený: `json-file`
+
+---
+
+## 🏃 Spúšťanie kontajnerov
+
+```bash
+docker run --rm -d --name logdemo logdemo:1.0.0
+```
+
+- `--rm`: kontajner sa zmaže po ukončení
+- `-d`: detached mód
+- `--name`: meno kontajnera
+- `logdemo:1.0.0`: image
+
+---
+
+## 🧷 Overwrite ENTRYPOINT
+
+```bash
+docker run -it --rm --entrypoint /bin/sh logdemo:1.0.0
+```
+- Prepisuje `ENTRYPOINT` a otvorí shell
+- Umožní ti prechádzať obsah image
+
+---
+
+## 🔍 Inšpekcia kontajnera
+
+```bash
+docker inspect <name> | grep Created
+```
+- Zistíš, kedy bol kontajner/image vytvorený
+
+---
+
+## 🧹 Vymazanie kontajnerov
+
+```bash
+docker container prune
+```
+- Vymaže **všetky zastavené** kontajnery
+
+---
+
+## 📎 Práca s kontajnerom
+
+```bash
+docker exec <id> cat /app/app.py
+```
+- Spustí príkaz `cat` v kontajneri (zobrazí obsah súboru)
+
+```bash
+docker attach <name>
+```
+- Pripojíš sa k bežiacemu kontajneru
+
+---
+
+## ⏸️ Pozastavenie a obnovenie
+
+```bash
+docker pause <id>
+docker unpause <id>
+```
+- Pozastaví / obnoví procesy bežiace v kontajneri
+
+
+
