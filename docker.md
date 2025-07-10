@@ -986,4 +986,38 @@ docker unpause <id>
 - Pozastaví / obnoví procesy bežiace v kontajneri
 
 
+# Docker príkaz `docker stats`
+
+## 🧾 Popis
+
+Príkaz `docker stats`:
+
+- **Zobrazuje živé štatistiky** (v reálnom čase) o všetkých bežiacich Docker kontajneroch.
+
+## 🔍 Využitie
+
+Slúži na monitorovanie systémových zdrojov, ktoré využívajú kontajnery:
+
+- **CPU %** – Využitie procesora
+- **MEM USAGE / LIMIT** – Spotreba a limit pamäte
+- **MEM %** – Percentuálne využitie pamäte
+- **NET I/O** – Sieťový prenos (prijaté / odoslané dáta)
+- **BLOCK I/O** – Prístup k disku (čítanie / zápis)
+- **PIDS** – Počet procesov bežiacich v kontajneri
+
+## 📌 Príklady použitia
+
+```bash
+# Zobrazenie štatistík všetkých bežiacich kontajnerov
+docker stats
+
+# Zobrazenie štatistík pre konkrétny kontajner
+docker stats <container_id_or_name>
+```
+
+## ❗ Poznámka
+
+- Príkaz `docker stats` **nepozastavuje ani neobnovuje** procesy v kontajneri. Slúži **výhradne na monitorovanie**.
+
+# What is a docker swarn 
 
