@@ -180,3 +180,44 @@ Používa sa namiesto hesla pri HTTPS prístupe do GitLab, najmä ak je dvojfakt
 ---
 
 **Poznámka**: `origin/main` alebo `origin/master` je názov vetvy vo vzdialenom repozitári.
+
+--- 
+
+git init = bude zaznamenavat všetko 
+
+git log --all --graph = prehladny log = ukoncenie q
+
+git checkout <nazov_filu> 
+
+--- 
+
+# what does the merging stands for 
+
+ked mergujeme dva branchce kam půjde výsledok ? 
+výsledok půjde do tej branche na ktorej aktualne pracujeme 
+
+master branch funguje ako to hlavne nad čo sa všetko ostatne stavia 
+
+sme teda v mastrovi a tam napišeme git megre feature1 čo vlastne spoji 
+ 
+
+# merge conflicts = 
+
+nevie ktoru zmenu by sme si mali vybrat a len sa nás opýta ktoru zmenu by sme chceli 
+
+teda nie jasne zjavne ake zmeny by sme mali taknut to v praxi znamena samotny merge conflict 
+
+## takto nijako vyzera merge conflict v logu 
+
+CONFLICT (content): Merge conflict in feature
+Automatic merge failed; fix conflicts and then co
+
+prakticky aj v našom editore bude poukazane o aký problém sa jedna 
+
+prakticky git branch conflict funguje na štyle je tu branch1 je tu branch2 you as the developer goes in a vyberas ktora zo zmien ma byt implementovana 
+
+features breanches 
+
+what are the features breanches ? 
+
+
