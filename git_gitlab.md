@@ -218,6 +218,54 @@ prakticky git branch conflict funguje na štyle je tu branch1 je tu branch2 you 
 
 features breanches 
 
+how to construct the pipelines ? 
+
+it does makes sense to put in parallel jovs that are similar in size 
+
+AWS - 
+
+always when you are pulling the image, make sure you are specifiing the tag 
+
+masking and protecting of the variables 
+
+protect variables = what does it means when the flag is enabled, it will only be available for the protected branches 
+
+mask variable, is disable by default 
+
+How
 what are the features breanches ? 
 
 
+how to make sure that everything what you have in your folder is sink to your s3
+
+pipeline is what we are talking about, and what we are having 
+
+pokial mame len jeden v pipeline 
+
+the default branch is going to automatically get updated in this branch 
+
+post deployment testing, what does it means and how does it work ? 
+
+# What is the CI / CD 
+
+the cd part can means the continues deployment or the continues delivery 
+
+pipelines also have the staging enviroment or also known as the preproduction enviroment 
+if there is any kind of an error in the production and the main pipeline breaks at least we havent affect the production 
+
+staging enviroment is usually non production, non public enviroment that is actually very close to actual 
+
+main topic is the continues integration and the continues delivery 
+
+cyklicky zivot softveroveho prostredia - enviroments 
+
+what does the reusing of the configuration means ? 
+
+
+## Continue delivery pipeline 
+
+- what is this ? 
+
+# this is the part of the config file 
+
+this might be the issue of the concept for our season 
