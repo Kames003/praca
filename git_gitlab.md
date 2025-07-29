@@ -264,6 +264,7 @@ what does the reusing of the configuration means ?
 
 ## Continue delivery pipeline 
 
+# docker inside of the docker, takto to spustaj to bude najlepšie pre čistotu systemu 
 - what is this ? 
 
 # this is the part of the config file 
