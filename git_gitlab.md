@@ -272,6 +272,8 @@ what does the reusing of the configuration means ?
 this might be the issue of the concept for our season 
 
 
+# Otazky ak sa najde čas 
+
 Veci ktore komplikovali docker build : 
 
 
