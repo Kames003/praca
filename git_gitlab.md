@@ -270,3 +270,24 @@ what does the reusing of the configuration means ?
 # this is the part of the config file 
 
 this might be the issue of the concept for our season 
+
+
+Veci ktore komplikovali docker build : 
+
+
+debug gem-om, ktory sa pokúša načítať v produkčnom prostredi aj ked bol vylúčeny z inštalacie
+
+v dockerfile sme vykonali inštaláciu ruby gems bez development/test skupin 
+
+# Inštalácia Ruby gems bez development/test skupín
+RUN bundle config set --local deployment 'true' && \
+    bundle config set --local without 'development test' && \
+    bundle install --jobs $(nproc) --retry 3
+    
+# Zabránenie načítaniu debug gem-u v produkčnom prostredí
+    if Rails.env.production?
+      config.debug_exception_response_format = :api
+    end
+
+## toto sme vykonali v application.rb
+
