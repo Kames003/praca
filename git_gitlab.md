@@ -293,3 +293,13 @@ RUN bundle config set --local deployment 'true' && \
 
 ## toto sme vykonali v application.rb
 
+# mrkni na toto 
+
+sudo dnf install -y qemu-kvm libvirt virt-install virt-manager virt-viewer edk2-ovmf swtpm \
+qemu-img guestfs-tools libosinfo libosinfo-tools tuned
+
+# testing for out app 
+
+curl http://localhost:8080/
+curl http://localhost:8080/libraries
+curl http://localhost:8080/health
