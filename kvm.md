@@ -1,31 +1,82 @@
-lsmod | grep kvm  = či su načitane moduly jadra pre virtualizaciu 
+# KVM Virtualizácia – Príkazy, Validácia a Tuned
 
+## Overenie podpory virtualizácie
+
+```bash
+lscpu | grep -i virtualization
+```
+> Overí, či CPU podporuje virtualizáciu (napr. VT-x, AMD-V).
+
+```bash
+lsmod | grep kvm
+```
+> Zistí, či sú načítané moduly jadra pre virtualizáciu (`kvm`, `kvm_intel` alebo `kvm_amd`).
+
+```bash
 modinfo kvm | head
+```
+> Zobrazí základné informácie o module `kvm`.
 
-QUEMU vyber 
+---
 
-lscpu | grep -i virtualization = determinizácia čo podporuje 
+## Validácia QEMU hosta
 
-sudo virt-host-validate qemu 
+```bash
+sudo virt-host-validate qemu
+```
+> Overí, či je systém vhodný na hostovanie virtualizovaných systémov pomocou QEMU/KVM.
 
-tuned = čo to je a k čomu nam sluzi ? 
+---
 
-omasmucha@RF-TOMASMUCHA-NTB:~/Plocha/library-app$ sudo systemctl enable --now tuned 
-[sudo] heslo pre používateľa tomasmucha: 
-tomasmucha@RF-TOMASMUCHA-NTB:~/Plocha/library-app$ tuned-adm active
-Current active profile: balanced
+## Tuned – optimalizačný nástroj
 
-tuned-adm list = výpis všetkeho z listu 
+Tuned je nástroj, ktorý automaticky aplikuje profily výkonu podľa použitia systému (napr. virtualizácia, desktop, server).
 
-sudo tuned-adm profile virtual host = prepnutie 
+### Spustenie Tuned a overenie aktívneho profilu
 
-sudo tuned-adm verify  = verifiakcia hosta 
+```bash
+sudo systemctl enable --now tuned
+```
 
+```bash
+tuned-adm active
+```
+> Zistí, ktorý profil je momentálne aktívny.
+
+```bash
+tuned-adm list
+```
+> Vypíše všetky dostupné profily.
+
+### Prepnúť na virtualizačný profil hosta
+
+```bash
+sudo tuned-adm profile virtual-host
+```
+
+### Verifikácia systému
+
+```bash
+sudo tuned-adm verify
+```
+
+---
+
+## Virtuálne siete
+
+```bash
 sudo virsh net-list --all
+```
+> Zobrazí všetky siete spravované pomocou `libvirt`.
 
-## Prihlasovačky do kvm na rails pc 
+---
 
-Meno pc : debian
-Heslo uzivatela root : 0000
-Meno nového usera : new_user 
-heslo pre noveho uzivatela : 0000 
+## Prihlasovacie údaje pre KVM (Debian VM na Rails PC)
+
+- **Názov PC**: `debian`
+- **Root používateľ**:
+  - Meno: `root`
+  - Heslo: `0000`
+- **Nový používateľ**:
+  - Meno: `new_user`
+  - Heslo: `0000`
